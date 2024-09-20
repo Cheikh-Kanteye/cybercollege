@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CyberLand | by Chika</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/highlightjs-themes@1.0.0/tomorrow-night.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex">
+    <aside class="navbar col">
+      <a href="#" class="logo flex items-center">
+        <span class="logo-icon"></span>
+        <p>Cyber<span>Land</span></p>
+      </a>
+
+      <nav>
+        <ul class="col">
+          <li class="flex active navlink" data-page="./pages/Dashboard.html">
+            <a href="#">
+              <i class="ri-dashboard-line"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="flex navlink" data-page="./pages/Courses.html">
+            <a href="#">
+              <i class="ri-book-open-line"></i>
+              <p>Cours</p>
+            </a>
+          </li>
+          <li class="flex navlink" data-page="./pages/Ressource.html">
+            <a href="#">
+              <i class="ri-book-shelf-line"></i>
+              <p>Ressources</p>
+            </a>
+          </li>
+          <li class="flex navlink" data-page="./pages/projets.html">
+            <a href="#">
+              <i class="ri-account-circle-line"></i>
+              <p>projets</p>
+            </a>
+          </li>
+          <li class="flex navlink" data-page="./pages/Settings.html">
+            <a href="#">
+              <i class="ri-settings-line"></i>
+              <p>Paramètres</p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="flex logout">
+        <a href="#">
+          <i class="ri-logout-circle-line"></i>
+          <p>Deconnexion</p></a
+        >
+      </div>
+      <div class="toggle-sidebar">
+        <i class="ri-arrow-left-s-line"></i>
+      </div>
+    </aside>
+    <main class="col">
+      <header class="flex items-center">
+        <div class="toggle-menu"><i class="ri-menu-line"></i></div>
+        <div class="text-group">
+          <p class="greeting">God morning.</p>
+          <h2>Cheikh Kante</h2>
+        </div>
+        <div class="search-group flex items-center">
+          <i class="ri-search-line"></i>
+          <input
+            type="search"
+            placeholder="Rechercher un cours"
+            name="search"
+            autocomplete="none"
+            id="search"
+          />
+        </div>
+        <div class="text-group">
+          <p class="date">Avril 24, 2024</p>
+          <h2 class="day">Mercredi</h2>
+        </div>
+      </header>
+
+      <div id="loader" class="loader"></div>
+      <section class="app-container"></section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script type="module" src="js/script.mjs"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/fr.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script lang="javascript">
+      moment.locale('fr');
+      const currentDate = document.querySelector(".date");
+      const day = document.querySelector(".day");
+
+      currentDate.textContent = moment().format("D MMM, YYYY")
+      day.textContent = moment().format('dddd')
+
+      let g = null;
+      let afternoon = 12;
+      let evening = 17;
+      let currentHour = parseFloat(moment().format("HH"));
+
+      if (currentHour >= afternoon && currentHour <= evening) g = "afternoon";
+      else if (currentHour >= evening) g = "evening";
+      else g = "morning";
+
+      document.querySelector(".greeting").textContent = `Good ${g}`;
+    </script>
+  </body>
+</html>
