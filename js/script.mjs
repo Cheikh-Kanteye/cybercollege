@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const progressSpeed = 50;
   let courseId = 1;
   let quizId = 1;
-  let courseCards, quizCards;
 
   // Initialisation
   loadPage("./pages/dashboard.html");
@@ -116,17 +115,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const boxColorElements = appContainer.querySelectorAll(".box-color");
 
     if (lightTheme && darkTheme) {
-      lightTheme.addEventListener("click", () => {
-        switchTheme(lightTheme, darkTheme, true);
-      });
-      darkTheme.addEventListener("click", () => {
-        switchTheme(lightTheme, darkTheme, false);
-      });
+      lightTheme.addEventListener("click", () => switchTheme(true));
+      darkTheme.addEventListener("click", () => switchTheme(false));
     }
 
     boxColorElements.forEach((box) => {
       const color = box.getAttribute("clr-base");
-      box.style = `--bg-c: hsl(${color})`;
+      box.style.setProperty("--bg-c", `hsl(${color})`);
       box.addEventListener("click", () => {
         root.style.setProperty("--first-color-base", color);
       });
@@ -135,11 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Change le thème clair/sombre
-   * @param {Element} lightTheme
-   * @param {Element} darkTheme
    * @param {boolean} isLight
    */
-  function switchTheme(lightTheme, darkTheme, isLight) {
+  function switchTheme(isLight) {
+    const lightTheme = appContainer.querySelector(".light");
+    const darkTheme = appContainer.querySelector(".dark");
     lightTheme.classList.toggle("active", isLight);
     darkTheme.classList.toggle("active", !isLight);
     body.classList.toggle("dark", !isLight);
@@ -149,8 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Initialisation de la navigation des cours et des quiz
    */
   function initCourseNavigation() {
-    courseCards = document.querySelectorAll(".course-card");
-    quizCards = document.querySelectorAll(".quiz-card");
+    const courseCards = document.querySelectorAll(".course-card");
+    const quizCards = document.querySelectorAll(".quiz-card");
 
     if (courseCards.length) {
       handleNavigationWithId(courseCards, courseId);
@@ -189,7 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const progressStatus = setInterval(() => {
-      updateProgress(p, progressValue, ++progressStart, progressEnd);
+      if (progressStart < progressEnd) {
+        updateProgress(p, progressValue, ++progressStart, progressEnd);
+      } else {
+        clearInterval(progressStatus);
+      }
     }, progressSpeed);
   }
 
@@ -206,10 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
       var(--first-color) ${progressStart * 3.6}deg,
       var(--container-color) ${progressStart * 3.6}deg
     )`;
-
-    if (progressStart >= progressEnd) {
-      clearInterval(progressStatus);
-    }
   }
 
   /**
@@ -265,10 +260,9 @@ document.addEventListener("DOMContentLoaded", () => {
       item.addEventListener("click", (e) => {
         e.preventDefault();
         const page = item.getAttribute("data-page");
-        const lastIndex = page.lastIndexOf("/");
-        const newId = page.slice(lastIndex + 1) || id;
+        const newId = page.split("/").pop() || id;
 
-        loadPage(page.substring(0, lastIndex));
+        loadPage(page.substring(0, page.lastIndexOf("/")));
         updateId(elements, newId);
       });
     });
@@ -280,9 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
    * @param {number} newId
    */
   function updateId(elements, newId) {
-    if (elements === courseCards) {
+    if (elements === document.querySelectorAll(".course-card")) {
       courseId = newId;
-    } else if (elements === quizCards) {
+    } else if (elements === document.querySelectorAll(".quiz-card")) {
       quizId = newId;
     }
   }
